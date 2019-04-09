@@ -1,19 +1,21 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, Menu} = require('electron')
 
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    frame: false,
-    width: 300,
-    height: 200,
-    resizable: false,
-    backgroundColor: '#66CD00',
-    autoHideMenuBar: true
-  })
+    //frame: false,
+    width: 500,
+    height: 500,
+    minWidth: 300,
+    minHeight: 200,
+    resizable: true,
+    backgroundColor: '#F4C242'
+  });
+  mainWindow.loadFile('index.html');
 
-  mainWindow.loadFile('index.html')
+  Menu.setApplicationMenu(null);
 }
 
 app.on('ready', createWindow)
