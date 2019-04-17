@@ -3,30 +3,31 @@ const { desktopCapturer } = require('electron')
 function captureVideo() {
   desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error
-
     for (let i = 0; i < sources.length; ++i) {
-      if (sources[i].name === 'My App') {
-        navigator.webkitGetUserMedia({
+      if (sources[i].name === 'Screen 2') {
+        navigator.mediaDevices.getUserMedia({
           audio: false,
           video: {
             mandatory: {
               chromeMediaSource: 'desktop',
               chromeMediaSourceId: sources[i].id,
-              audio: false,
-              minWidth: 1280,
-              maxWidth: 1280,
+              minWidth: 720,
+              maxWidth: 720,
               minHeight: 720,
               maxHeight: 720
             }
           }
-        }, handleStream, handleError);
-        return;
+        }).then((stream) => handleStream(stream))
+        .catch((e) => handleError(e))
+        return
       }
     }
   })
 
   function handleStream(stream) {
-    document.querySelector('video').src = URL.createObjectURL(stream)
+    const video = document.querySelector('video');
+    video.srcObject = stream;
+    video.onloadedmetadata = (e) => video.play();
   }
 
   function handleError(e) {
