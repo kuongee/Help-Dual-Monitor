@@ -11,8 +11,8 @@ function captureVideo() {
             mandatory: {
               chromeMediaSource: 'desktop',
               chromeMediaSourceId: sources[i].id,
-              minWidth: 720,
-              maxWidth: 720,
+              minWidth: 1280,
+              maxWidth: 1280,
               minHeight: 720,
               maxHeight: 720
             }

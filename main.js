@@ -2,10 +2,11 @@ const { app, BrowserWindow, Menu } = require('electron')
 
 
 let mainWindow
+let childWindow
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow ({
     //frame: false,
     width: 500,
     height: 500,
@@ -14,9 +15,16 @@ function createWindow() {
     resizable: true,
     backgroundColor: '#F4C242',
   });
-  mainWindow.loadFile('index.html');
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
   mainWindow.webContents.openDevTools();
   Menu.setApplicationMenu(null);
+
+  childWindow = new BrowserWindow ({
+    width: 500,
+    height: 500,
+  })
+  childWindow.loadURL('file://' + __dirname + '/child.html');
+
   console.log("here");
 }
 
