@@ -11,14 +11,21 @@
 
 <body style="margin: 0; padding: 0;">
     <p> Testing </p>
-    <input id="capture" value="Capture" type="button"/>
+    <input id="capture" value="Capture" type="button" />
     <p id="test"> </p>
 
-    <video width="800" height="800" controls>
-
-    </video>
-
+    <!-- 
+    <video width="800" height="800" controls> </video> 
     <script type="text/javascript" src="video.js"> </script>
+    -->
+
+    <script>
+        const { ipcRenderer } = require('electron')
+        document.getElementById("capture").addEventListener("click", function () {
+            console.log("Send message : button"); 
+            ipcRenderer.send('synchronous-message', 'button') 
+        }); 
+    </script>
 </body>
 
 
