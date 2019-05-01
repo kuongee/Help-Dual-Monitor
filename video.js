@@ -1,17 +1,21 @@
-const { desktopCapturer } = require('electron')
+const { desktopCapturer, ipcRenderer } = require('electron')
+ipcRenderer.on('videoStart', (event, arg) => {
+    console.log("Get " + arg);
+    captureVideo();
+})
 
 function captureVideo() {
   desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error
     for (let i = 0; i < sources.length; ++i) {
-      if (sources[i].name === 'Screen 2') {
+      if (sources[i].name === 'Screen 1') {
         navigator.mediaDevices.getUserMedia({
           audio: false,
           video: {
             mandatory: {
               chromeMediaSource: 'desktop',
               chromeMediaSourceId: sources[i].id,
-              minWidth: 1280,
+              minWidth: 720,
               maxWidth: 1280,
               minHeight: 720,
               maxHeight: 720
@@ -35,7 +39,3 @@ function captureVideo() {
   }
 
 }
-
-document.getElementById("capture").addEventListener("click", function () {
-  captureVideo();
-}); 

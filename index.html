@@ -3,21 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>My App</title>
+    <title> Share my monitor </title>
 </head>
 <style>
 
 </style>
 
-<body style="margin: 0; padding: 0;">
-    <p> Testing </p>
-    <input id="capture" value="Capture" type="button" />
-    <p id="test"> </p>
-
-    <!-- 
-    <video width="800" height="800" controls> </video> 
-    <script type="text/javascript" src="video.js"> </script>
-    -->
+<body style="margin: 0; padding: 10px;">
+    <p> Share My Monitor </p>
+    <input id="capture" value="Share" type="button" />
+    <input id="stop" value="Stop" type="button" />
 
     <script>
         const { ipcRenderer } = require('electron')

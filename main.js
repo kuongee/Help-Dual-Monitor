@@ -1,3 +1,4 @@
+const electron = require('electron')
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 
 
@@ -8,11 +9,9 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     //frame: false,
-    width: 500,
-    height: 500,
-    minWidth: 300,
-    minHeight: 200,
-    resizable: true,
+    width: 300,
+    height: 200,
+    resizable: false,
     backgroundColor: '#F4C242',
   });
   mainWindow.loadURL('file://' + __dirname + '/index.html');
@@ -35,9 +34,13 @@ ipcMain.on('synchronous-message', (event, arg) => {
   childWindow.webContents.send('videoStart', arg);
 });
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  let displays = electron.screen.getAllDisplays()
+  console.log(displays)
+  createWindow();
+})
 
-app.on('activate', function () {
+app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
