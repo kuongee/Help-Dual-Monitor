@@ -11,15 +11,19 @@
 
 <body style="margin: 0; padding: 10px;">
     <p> Share My Monitor </p>
-    <input id="capture" value="Share" type="button" />
+    <input id="play" value="Play" type="button" />
     <input id="stop" value="Stop" type="button" />
 
     <script>
         const { ipcRenderer } = require('electron')
-        document.getElementById("capture").addEventListener("click", function () {
-            console.log("Send message : button"); 
-            ipcRenderer.send('synchronous-message', 'button') 
-        }); 
+        function sendMessage(arg) {
+            console.log("Send message : ", arg); 
+            ipcRenderer.send('synchronous-message', arg);
+        }
+
+        document.getElementById("play").addEventListener("click", () => { sendMessage('play') });
+        document.getElementById("stop").addEventListener("click", () => { sendMessage('stop') });
+
     </script>
 </body>
 

@@ -30,7 +30,7 @@ function createChildWindow(position) {
 
 ipcMain.on('synchronous-message', (event, arg) => {
   console.log("Main process " + arg);
-  childWindow.webContents.send('videoStart', arg);
+  childWindow.webContents.send('videoCommand', arg);
 });
 
 app.on('ready', () => {

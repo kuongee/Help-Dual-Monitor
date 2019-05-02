@@ -1,7 +1,10 @@
 const { desktopCapturer, ipcRenderer } = require('electron')
-ipcRenderer.on('videoStart', (event, arg) => {
-    console.log("Get " + arg);
+ipcRenderer.on('videoCommand', (event, arg) => {
+  console.log("Get " + arg);
+  if (arg === 'play')
     captureVideo();
+  else if (arg === 'stop')
+    stopVideo();
 })
 
 function captureVideo() {
@@ -22,11 +25,12 @@ function captureVideo() {
             }
           }
         }).then((stream) => handleStream(stream))
-        .catch((e) => handleError(e))
+          .catch((e) => handleError(e))
         return
       }
     }
   })
+
 
   function handleStream(stream) {
     const video = document.querySelector('video');
@@ -37,5 +41,10 @@ function captureVideo() {
   function handleError(e) {
     console.log(e)
   }
+}
 
+function stopVideo() {
+  const video = document.querySelector('video');
+  if(!video.paused)
+    video.pause();
 }
