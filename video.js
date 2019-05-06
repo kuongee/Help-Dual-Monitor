@@ -1,15 +1,24 @@
 const { desktopCapturer, ipcRenderer } = require('electron')
+
+let width = window.innerWidth - 20;
+let height = window.innerHeight - 20;
+let video = document.querySelector('video');
+video.width = width;
+video.height = height;
+
 ipcRenderer.on('videoCommand', (event, arg) => {
-  console.log("Get " + arg);
-  if (arg === 'play')
+  if (arg === 'play') {
     captureVideo();
-  else if (arg === 'stop')
+  }
+  else if (arg === 'stop') {
     stopVideo();
+  }
 })
 
 function captureVideo() {
   desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error
+        console.log(sources);
     for (let i = 0; i < sources.length; ++i) {
       if (sources[i].name === 'Screen 1') {
         navigator.mediaDevices.getUserMedia({
@@ -18,10 +27,10 @@ function captureVideo() {
             mandatory: {
               chromeMediaSource: 'desktop',
               chromeMediaSourceId: sources[i].id,
-              minWidth: 720,
-              maxWidth: 1280,
-              minHeight: 720,
-              maxHeight: 720
+              minWidth: 1366,
+              maxWidth: 1366,
+              minHeight: 768,
+              maxHeight:768 
             }
           }
         }).then((stream) => handleStream(stream))
@@ -44,6 +53,6 @@ function captureVideo() {
 
 function stopVideo() {
   const video = document.querySelector('video');
-  if(!video.paused)
+  if (!video.paused)
     video.pause();
 }

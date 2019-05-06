@@ -18,13 +18,13 @@ function createMainWindow() {
   Menu.setApplicationMenu(null);
 }
 
-function createChildWindow(position) {
+function createChildWindow(workArea) {
   childWindow = new BrowserWindow({
-    x: position.x,
-    y: position.y,
-    width: 500,
-    height: 500,
-  })
+    x: workArea.x,
+    y: workArea.y,
+    width: workArea.width,
+    height: workArea.height,
+  });
   childWindow.loadURL('file://' + __dirname + '/child.html');
 }
 
@@ -49,11 +49,13 @@ function createWindow() {
       mainWindow.webContents.send('dualDisplay', 'false');
     })
 
-    let position = {
-      x: dualDisplay.bounds.x + 50,
-      y: dualDisplay.bounds.y + 50
+    let workArea = {
+      x: dualDisplay.bounds.x,
+      y: dualDisplay.bounds.y,
+      width: dualDisplay.bounds.width,
+      height: dualDisplay.bounds.height
     }
-    createChildWindow(position)
+    createChildWindow(workArea)
   }
 }
 
@@ -62,7 +64,7 @@ app.on('ready', () => {
 
   /* open dev tools in each window */
   //mainWindow.webContents.openDevTools();
-  //childWindow.webContents.openDevTools();
+  childWindow.webContents.openDevTools();
   console.log("ready");
 })
 
