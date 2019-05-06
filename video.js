@@ -7,18 +7,17 @@ video.width = width;
 video.height = height;
 
 ipcRenderer.on('videoCommand', (event, arg) => {
-  if (arg === 'play') {
-    captureVideo();
+  if (arg.message === 'play') {
+    captureVideo(arg.width, arg.height);
   }
-  else if (arg === 'stop') {
+  else if (arg.message === 'stop') {
     stopVideo();
   }
 })
 
-function captureVideo() {
+function captureVideo(mainWidth, mainHeight) {
   desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error
-        console.log(sources);
     for (let i = 0; i < sources.length; ++i) {
       if (sources[i].name === 'Screen 1') {
         navigator.mediaDevices.getUserMedia({
@@ -27,10 +26,10 @@ function captureVideo() {
             mandatory: {
               chromeMediaSource: 'desktop',
               chromeMediaSourceId: sources[i].id,
-              minWidth: 1366,
-              maxWidth: 1366,
-              minHeight: 768,
-              maxHeight:768 
+              minWidth: mainWidth,
+              maxWidth: mainWidth,
+              minHeight: mainHeight,
+              maxHeight: mainHeight 
             }
           }
         }).then((stream) => handleStream(stream))

@@ -15,6 +15,7 @@
     <input id="stop" class="command" value="Stop" type="button" disabled />
 
     <script>
+        const electron = require('electron')
         const { ipcRenderer } = require('electron')
         ipcRenderer.on('dualDisplay', (event, arg) => {
             inputSelect = document.getElementsByClassName('command');
@@ -24,8 +25,14 @@
         })
 
         function sendMessage(arg) {
-            console.log("Send message : ", arg); 
-            ipcRenderer.send('synchronous-message', arg);
+            const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
+            let info = {
+                message: arg,
+                width: width,
+                height: height
+            }
+            console.log("Send message : ", info.message); 
+            ipcRenderer.send('synchronous-message', info);
         }
 
         document.getElementById("play").addEventListener("click", () => { sendMessage('play') });

@@ -1,12 +1,11 @@
 const electron = require('electron')
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 
-
 let mainWindow
 let childWindow
 
 function createMainWindow() {
-  // Create the browser window.
+  // Create the main control window.
   mainWindow = new BrowserWindow({
     //frame: false,
     width: 300,
@@ -19,6 +18,7 @@ function createMainWindow() {
 }
 
 function createChildWindow(workArea) {
+  // Create the video window
   childWindow = new BrowserWindow({
     x: workArea.x,
     y: workArea.y,
@@ -29,14 +29,12 @@ function createChildWindow(workArea) {
 }
 
 ipcMain.on('synchronous-message', (event, arg) => {
-  console.log("Main process " + arg);
+  console.log("Main process " + arg.message);
   childWindow.webContents.send('videoCommand', arg);
 });
 
 function createWindow() {
-  let displays = electron.screen.getAllDisplays()
-  console.log(displays);
-
+  let displays = electron.screen.getAllDisplays();
   let dualDisplay = displays.find((display) => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
   });
@@ -55,7 +53,7 @@ function createWindow() {
       width: dualDisplay.bounds.width,
       height: dualDisplay.bounds.height
     }
-    createChildWindow(workArea)
+    createChildWindow(workArea);
   }
 }
 
@@ -64,7 +62,7 @@ app.on('ready', () => {
 
   /* open dev tools in each window */
   //mainWindow.webContents.openDevTools();
-  childWindow.webContents.openDevTools();
+  //childWindow.webContents.openDevTools();
   console.log("ready");
 })
 
