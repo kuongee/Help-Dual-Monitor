@@ -11,11 +11,18 @@
 
 <body style="margin: 0; padding: 10px;">
     <p> Share My Monitor </p>
-    <input id="play" value="Play" type="button" />
-    <input id="stop" value="Stop" type="button" />
+    <input id="play" class="command" value="Play" type="button" disabled />
+    <input id="stop" class="command" value="Stop" type="button" disabled />
 
     <script>
         const { ipcRenderer } = require('electron')
+        ipcRenderer.on('dualDisplay', (event, arg) => {
+            inputSelect = document.getElementsByClassName('command');
+            for(const i in inputSelect) {
+                inputSelect[i].disabled = false;
+            }
+        })
+
         function sendMessage(arg) {
             console.log("Send message : ", arg); 
             ipcRenderer.send('synchronous-message', arg);

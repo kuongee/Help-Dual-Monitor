@@ -33,27 +33,37 @@ ipcMain.on('synchronous-message', (event, arg) => {
   childWindow.webContents.send('videoCommand', arg);
 });
 
-app.on('ready', () => {
+function createWindow() {
   let displays = electron.screen.getAllDisplays()
   console.log(displays);
+
   let dualDisplay = displays.find((display) => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
-  })
+  });
 
   createMainWindow();
-  if(dualDisplay) {
+
+  if (dualDisplay) {
+    // send dual monitor event
+    mainWindow.webContents.on('did-finish-load', () => {
+      mainWindow.webContents.send('dualDisplay', 'false');
+    })
+
     let position = {
       x: dualDisplay.bounds.x + 50,
       y: dualDisplay.bounds.y + 50
     }
-    createChildWindow(position) 
+    createChildWindow(position)
   }
+}
+
+app.on('ready', () => {
+  createWindow();
 
   /* open dev tools in each window */
-  mainWindow.webContents.openDevTools();
-  childWindow.webContents.openDevTools();
-
-  console.log("here");
+  //mainWindow.webContents.openDevTools();
+  //childWindow.webContents.openDevTools();
+  console.log("ready");
 })
 
 app.on('activate', () => {
