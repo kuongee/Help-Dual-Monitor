@@ -3,6 +3,7 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 
 let mainWindow
 let childWindow
+let borderWindow
 
 function createMainWindow() {
   // Create the main control window.
@@ -20,6 +21,7 @@ function createMainWindow() {
 function createChildWindow(workArea) {
   // Create the video window
   childWindow = new BrowserWindow({
+    parent: mainWindow,
     x: workArea.x,
     y: workArea.y,
     width: workArea.width,
@@ -27,11 +29,6 @@ function createChildWindow(workArea) {
   });
   childWindow.loadURL('file://' + __dirname + '/child.html');
 }
-
-ipcMain.on('synchronous-message', (event, arg) => {
-  console.log("Main process " + arg.message);
-  childWindow.webContents.send('videoCommand', arg);
-});
 
 function createWindow() {
   let displays = electron.screen.getAllDisplays();
@@ -56,6 +53,11 @@ function createWindow() {
     createChildWindow(workArea);
   }
 }
+
+ipcMain.on('synchronous-message', (event, arg) => {
+  console.log("Main process " + arg.message);
+  childWindow.webContents.send('videoCommand', arg);
+});
 
 app.on('ready', () => {
   createWindow();
