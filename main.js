@@ -5,29 +5,46 @@ let mainWindow
 let childWindow
 let borderWindow
 
-function createMainWindow() {
-  // Create the main control window.
-  mainWindow = new BrowserWindow({
-    //frame: false,
+let currentMainScreen = 1;
+
+function setMainWindow(workArea) {
+  // Set the main control window.
+  mainWindow.setBounds({
+    x: workArea.x,
+    y: workArea.y,
     width: 300,
     height: 200,
-    resizable: false,
-    backgroundColor: '#F4C242',
-  });
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
-  Menu.setApplicationMenu(null);
+  })
+  mainWindow.center();
 }
 
-function createChildWindow(workArea) {
-  // Create the video window
-  childWindow = new BrowserWindow({
-    parent: mainWindow,
+function setChildWindow(workArea) {
+  // Set the video window
+  childWindow.setBounds({
     x: workArea.x,
     y: workArea.y,
     width: workArea.width,
     height: workArea.height,
   });
+  childWindow.setFullScreen(true);
+}
+
+function initWindows() {
+  mainWindow = new BrowserWindow({
+    resizable: false,
+    backgroundColor: '#F4C242',
+  });
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
+
+  childWindow = new BrowserWindow({
+    parent: mainWindow,
+  });
   childWindow.loadURL('file://' + __dirname + '/child.html');
+  Menu.setApplicationMenu(null);
+
+  /* open dev tools in each window */
+  //mainWindow.webContents.openDevTools();
+  childWindow.webContents.openDevTools();
 }
 
 function createWindow() {
@@ -36,35 +53,52 @@ function createWindow() {
     return display.bounds.x !== 0 || display.bounds.y !== 0
   });
 
-  createMainWindow();
-
   if (dualDisplay) {
+    initWindows();
+    setMainWindow(displays[0].bounds);
+
     // send dual monitor event
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.webContents.send('dualDisplay', 'false');
     })
 
-    let workArea = {
-      x: dualDisplay.bounds.x,
-      y: dualDisplay.bounds.y,
-      width: dualDisplay.bounds.width,
-      height: dualDisplay.bounds.height
-    }
-    createChildWindow(workArea);
+    setChildWindow(dualDisplay.bounds);
+  }
+}
+
+function switchScreenNumber() {
+  let displays = electron.screen.getAllDisplays();
+  let Screen1 = displays[0].bounds;
+  let Screen2 = displays[1].bounds;
+  if (currentMainScreen === 1) {
+    setMainWindow(Screen2);
+    setChildWindow(Screen1);
+    currentMainScreen = 2;
+  }
+  else {
+    setMainWindow(Screen1);
+    setChildWindow(Screen2);
+    currentMainScreen = 1;
   }
 }
 
 ipcMain.on('synchronous-message', (event, arg) => {
   console.log("Main process " + arg.message);
-  childWindow.webContents.send('videoCommand', arg);
+  if (arg.message === 'change') {
+    switchScreenNumber();
+  }
+  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
+  let info = {
+    message: arg.message,
+    width: width,
+    height: height
+  }
+  childWindow.webContents.send('videoCommand', info);
 });
 
 app.on('ready', () => {
   createWindow();
 
-  /* open dev tools in each window */
-  //mainWindow.webContents.openDevTools();
-  //childWindow.webContents.openDevTools();
   console.log("ready");
 })
 

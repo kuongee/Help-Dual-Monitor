@@ -6,6 +6,8 @@ let video = document.querySelector('video');
 video.width = width;
 video.height = height;
 
+let currentCaptureScreen = 'Screen 1';
+
 ipcRenderer.on('videoCommand', (event, arg) => {
   if (arg.message === 'play') {
     captureVideo(arg.width, arg.height);
@@ -13,13 +15,17 @@ ipcRenderer.on('videoCommand', (event, arg) => {
   else if (arg.message === 'stop') {
     stopVideo();
   }
+  else if(arg.message === 'change') {
+    currentCaptureScreen = currentCaptureScreen === 'Screen 1' ? 'Screen 2' : 'Screen 1';;
+    captureVideo(arg.width, arg.height);
+  }
 })
 
 function captureVideo(mainWidth, mainHeight) {
   desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error
     for (let i = 0; i < sources.length; ++i) {
-      if (sources[i].name === 'Screen 1') {
+      if (sources[i].name === currentCaptureScreen) {
         navigator.mediaDevices.getUserMedia({
           audio: false,
           video: {
