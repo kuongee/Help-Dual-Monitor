@@ -17,7 +17,7 @@ ipcRenderer.on("videoCommand", (event, arg) => {
     currentCaptureScreen =
       currentCaptureScreen === "Screen 1" ? "Screen 2" : "Screen 1";
     const video = document.querySelector("video");
-    if (video.played) captureVideo(arg.width, arg.height);
+    if (!video.paused) captureVideo(arg.width, arg.height);
   }
 });
 
