@@ -14,10 +14,11 @@ ipcRenderer.on("videoCommand", (event, arg) => {
   } else if (arg.message === "stop") {
     stopVideo();
   } else if (arg.message === "change") {
-    currentCaptureScreen =
-      currentCaptureScreen === "Screen 1" ? "Screen 2" : "Screen 1";
+    currentCaptureScreen = currentCaptureScreen === "Screen 1" ? "Screen 2" : "Screen 1";
     const video = document.querySelector("video");
-    if (!video.paused) captureVideo(arg.width, arg.height);
+    const isPause = video.paused;
+    video.pause();
+    if (!isPause) captureVideo(arg.width, arg.height);
   }
 });
 
