@@ -3,7 +3,6 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 
 let mainWindow
 let childWindow
-let borderWindow
 
 let currentMainScreen = 1;
 
@@ -31,8 +30,9 @@ function setChildWindow(workArea) {
 
 function initWindows() {
   mainWindow = new BrowserWindow({
-    resizable: false,
-    backgroundColor: '#F4C242',
+    resizable: true,
+    transparent: true,
+    frame: false
   });
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 

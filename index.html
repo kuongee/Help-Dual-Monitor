@@ -3,14 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> Share my monitor </title>
+    <title> Share my screen </title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body style="margin: 0; padding: 10px;">
-    <p> Share My Monitor </p>
-    <input id="play" class="command" value="Play" type="button" disabled />
-    <input id="stop" class="command" value="Pause" type="button" disabled />
-    <input id="change" class="command" value="Change Main Screen" type="button" disabled />
+<body style="-webkit-app-region: drag;">
+    <div class="flex">
+        <div class="header">
+            <h3> Share My Screen </h3>
+        </div>
+        <input id="close" class="command" value="X" type="button" />
+    </div>
+    <div class="control">
+        <input id="play" class="command" value="Play" type="button" disabled />
+        <input id="stop" class="command" value="Pause" type="button" disabled />
+        <input id="change" class="command" value="Change Main Screen" type="button" disabled />
+    </div>
 
     <script type="text/javascript" src="index.js"> </script>
 </body>

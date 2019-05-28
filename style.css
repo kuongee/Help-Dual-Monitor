@@ -1,0 +1,20 @@
+.flex {
+    display: flex;
+    background-color: LavenderBlush;
+}
+
+.header {
+    border: 0px solid black;
+    width: 100%;
+    text-align: center;
+    padding: 0px;
+}
+
+.control {
+  padding: 15px;
+  border: 1px solid Thistle;
+}
+
+.command {
+    -webkit-app-region: no-drag;
+}
